@@ -4,7 +4,10 @@
 \alias{shiny_app}
 \title{Shiny app for the \code{pssr} package}
 \usage{
-shiny_app()
+shiny_app(browser = TRUE)
+}
+\arguments{
+\item{browser}{Whether the app should use the browser or not -- default to \code{TRUE}}
 }
 \description{
 Lanches a Shiny app for performing the core analyses included
