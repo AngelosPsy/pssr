@@ -35,7 +35,7 @@ The app window will now appear. After that, you will be able to navigate through
 
 # Help, buggs, requests
 
-For help, buggs, or requests, you can use the issue tab in github: [https://github.com/AngelosPsy/pssr/issues](https://github.com/AngelosPsy/pssr/issues).
+For help, bugs, or requests, you can use the issue tab in github: [https://github.com/AngelosPsy/pssr/issues](https://github.com/AngelosPsy/pssr/issues).
 
 
 
