@@ -1,0 +1,27 @@
+Package: pssr
+Type: Package
+Title: A suite for functions for the easy preregistration, as well as the easy sharing of data and material for experimental psychopathology studies
+Version: 0.1.0
+Date: 2015-08-06
+Authors@R: c(person("Angelos", "Krypotos", email = "amkrypotos@gmail.com", role = c("aut", "cre")),   person("Nicolas", "Perez", email = "nicolasp89@gmail.com", role = c("aut")))
+Description: Provides functions for the easy preregistration of experimental studies, together with function for the easy upload of experimental material and data. The package suggests a specific folder structure for each created project. It also includes functions for the version control of each project, via git. Lastly, a shiny application, included in the package, makes the use of the package much easier.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
+URL: https://github.com/AngelosPsy/pssr
+BugReports: https://github.com/AngelosPsy/pssr/issues
+Imports: prereg,
+    rmarkdown,
+    stringr,
+    sodium,
+    foreign,
+    git2r,
+    data.table,
+    dplyr,
+    methods,
+    digest,
+    devtools,
+    shinyFiles,
+    shinyjs,
+    shiny

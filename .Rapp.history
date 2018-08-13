@@ -1,0 +1,30 @@
+load("/Users/angelos-miltiadiskrypotos/Dropbox/PostDocUU/projects/JAP/opscr/groups.csv.rds")
+ls()
+load("/Users/angelos-miltiadiskrypotos/Dropbox/PostDocUU/projects/JAP/opscr/groups.rds")
+key_string = "password"
+key = hash(charToRaw(key_string))
+library(sodium)
+key = hash(charToRaw(key_string))
+nonce_char = scan("nonce", what = "character")#
+nonce = hex2bin(paste(nonce_char, collapse = ""))
+cipher = readRDS("exp1_encrypted.rds")#
+s_dat = data_decrypt(cipher, key, nonce)#
+exp1 = unserialize(s_dat)
+cipher = readRDS("groups.rds")
+s_dat = data_decrypt(cipher, key, nonce)
+exp1 = unserialize(s_dat)
+exp1
+load("/Users/angelos-miltiadiskrypotos/Dropbox/PostDocUU/projects/JAP/opscr/rere_decrypted_data.rds")
+ls
+ls()
+load("/Users/angelos-miltiadiskrypotos/Dropbox/PostDocUU/projects/JAP/opscr/rere_decrypted_data.rds")
+ls()
+load("/Users/angelos-miltiadiskrypotos/Dropbox/PostDocUU/projects/JAP/opscr/groups_decrypted_data.rds")
+ls()
+load("/Users/angelos-miltiadiskrypotos/Dropbox/PostDocUU/projects/JAP/opscr/groups_decrypted_data.rds")
+ls()
+load("groups_decrypted_data.rds")
+getwd()
+readRDS("groups_decrypted_data.rds")
+readRDS("groups.rds")
+ls()
