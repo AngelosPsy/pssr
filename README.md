@@ -33,7 +33,7 @@ shiny_app()
 
 The app window will now appear. After that, you will be able to navigate through the tabs and use the package as described in the publication.
 
-# Help, buggs, requests
+# Help, bugs, requests
 
 For help, bugs, or requests, you can use the issue tab in github: [https://github.com/AngelosPsy/pssr/issues](https://github.com/AngelosPsy/pssr/issues).
 

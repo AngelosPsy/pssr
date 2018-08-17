@@ -11,26 +11,38 @@ options(editor = "internal")
 '.navbar-default .navbar-brand {
                          color: #cc3f3f;}'
 
-read_pre_file <- function(text_file, object, session_in = session, file_path) {
-  text_file <- paste0("preregistration/backuptext/", file_path, "/", text_file)
+read_pre_file <- function(text_file, object, session_in = session, file_path = "none") {
+  #if (file_path == "none"){
+  #  text_file <- paste0("backuptext/", text_file)
+  #} else{
+    #text_file <- paste0("backuptext/", file_path, "/", text_file)
+    #getwd()
+  #}
+
   if (file.exists(x = text_file)){
     rt <- readLines(text_file)
     updateTextAreaInput(session = session_in, object, value = rt)
   } else {
-    write.table(text_file, text_file,
+    write.table(object, text_file,
                 eol = "", quote = FALSE, row.names = FALSE, col.names = FALSE)
   }
 }
 
-update_pre_file <- function(text_file, object, file_path){
-  text_file <- paste0("preregistration/backuptext/", file_path, "/", text_file)
+update_pre_file <- function(text_file, object, file_path = "none"){
+  #if(file_path == "none"){
+
+    #text_file <- paste0("preregistration/backuptext/", text_file)
+  #}else{
+    #text_file <- paste0("preregistration/backuptext/", file_path, "/", text_file)
+
+  #}
   write.table(object, text_file,
               eol = "", quote = FALSE, row.names = FALSE, col.names = FALSE)
 }
 
 ui <- fluidPage(
   shinyjs::useShinyjs(),
-  titlePanel("Experimental Psychopathology Software"),
+  titlePanel("The Preregistration and Sharing Software"),
   sidebarLayout(
     sidebarPanel(
                 h2("General instructions"),
@@ -44,9 +56,7 @@ ui <- fluidPage(
                 p("Angelos Krypotos: amkrypotos@gmail.com"),
                 p("Nicolas Perez: nicolasp89@gmail.com"),
                 h5("Reference"),
-                p("Krypotos1, A-M., Klugkist, I., Mertens, G., & Engelhard, I. M. (submitted).
-                  A step-by-step guide on pre-registration of statistical analyses and
-                  effective data sharing for psychopathology research.")),
+                p("Krypotos, A-M., Klugkist, I., Mertens, G., & Engelhard, I. M. (submitted). A Step-By-Step Guide on Preregistration and Effective Data Sharing for Psychopathology Research.")),
     mainPanel(
       tabsetPanel(type = "tabs", id = "tabs",
                   tabPanel("Create project", id="create_tab",
@@ -89,7 +99,7 @@ ui <- fluidPage(
                           textInput("preregistrationtext", label = h4("Enter name of the
                                     preregistration", value = "")),
                           selectInput("selectTemplate", label = h4("Choose a pre-registration template"), choices =
-                                        list("eps" = "eps", "aspredicted" = "aspredicted",
+                                        list("pss" = "pss", "aspredicted" = "aspredicted",
                                              "cos" = "cos"), selected = 2),
                           div(style="display:inline-block",
                               actionButton("f_prer_button", "Search Preregistrations",icon = icon("search"),
@@ -356,9 +366,6 @@ server <- function(input, output, session) {
     } else if(proj_dir()!=""){
       updateTextInput(session, "text", value = tail(unlist(strsplit(getwd(), "/")), 1))
       ""
- # } else {
-   # updateTextInput(session, "text", value = tail(unlist(strsplit(getwd(), "/")), 1))
-  #  paste0("Your project is located in: ", proj_dir())
   }
   }
   )
@@ -414,9 +421,45 @@ server <- function(input, output, session) {
     } else {
       pssr::prereg_create(file_name = prereg_name_reac(),
                           template_name = template_reac(), edit = FALSE)
-      dir.create(prereg_name_reac())
-      # Show template tab and move there
+      setwd("backuptext")
       shiny::showTab("tabs","template_tab", select = TRUE)
+      dir.create(prereg_name_reac())
+      setwd(prereg_name_reac())
+      pathz <- getwd()
+      print(pathz)
+
+      read_pre_file("title.txt", "title_par", session, pathz)
+      observeEvent(input$title_par, {setwd(print(pathz)); update_pre_file("title.txt", title_par(), pathz)})
+      read_pre_file("author.txt", "author_par", session, pathz)
+      observeEvent(input$author_par, {update_pre_file("author.txt", author_par(), pathz)})
+      read_pre_file("affiliation.txt", "affiliation_par", session, pathz)
+      observeEvent(input$affiliation_par, {update_pre_file("affiliation.txt", affiliation_par(), pathz)})
+      read_pre_file("study_questions.txt", "study_questions_par", session, pathz)
+      observeEvent(input$study_questions_par, {update_pre_file("study_questions.txt", study_questions_par(), pathz)})
+      read_pre_file("study_hypotheses.txt", "study_hypotheses_par", session, pathz)
+      observeEvent(input$study_hypotheses_par, {update_pre_file("study_hypotheses.txt", study_hypotheses_par(), pathz)})
+      read_pre_file("stimuli.txt", "stimuli_par", session, pathz)
+      observeEvent(input$stimuli_par, {update_pre_file("stimuli.txt", stimuli_par(), pathz)})
+      read_pre_file("questionnaire.txt", "questionnaire_par", session, pathz)
+      observeEvent(input$questionnaire_par, {update_pre_file("questionnaire.txt", questionnaire_par(), pathz)})
+      read_pre_file("equipment.txt", "equipment_par", session, pathz)
+      observeEvent(input$equipment_par, {update_pre_file("equipment.txt", equipment_par(), pathz)})
+      read_pre_file("procedure.txt", "procedure_par", session, pathz)
+      observeEvent(input$procedure_par, {update_pre_file("procedure.txt", procedure_par(), pathz)})
+      read_pre_file("protocol.txt", "protocol_par", session, pathz)
+      observeEvent(input$protocol_par, {update_pre_file("protocol.txt", protocol_par(), pathz)})
+      read_pre_file("participant_number.txt", "participant_number_par", session, pathz)
+      observeEvent(input$participant_number_par, {update_pre_file("participant_number.txt", participant_number_par(), pathz)})
+      read_pre_file("stopping_rule.txt", "stopping_rule_par", session, pathz)
+      observeEvent(input$stopping_rule_par, {update_pre_file("stopping_rule.txt", stopping_rule_par(), pathz)})
+      read_pre_file("confirming_theershold.txt", "confirming_theershold_par", session, pathz)
+      observeEvent(input$confirming_theershold_par, {update_pre_file("confirming_theershold.txt", confirming_theershold_par(), pathz)})
+      read_pre_file("disconfirming_theershold.txt", "disconfirming_theershold_par", session, pathz)
+      observeEvent(input$disconfirming_theershold_par, {update_pre_file("disconfirming_theershold.txt", disconfirming_theershold_par(), pathz)})
+      read_pre_file("other.txt", "other_par", session, pathz)
+      observeEvent(input$other_par, {update_pre_file("other.txt", other_par(), pathz)})
+      read_pre_file("references.txt", "references_par", session, pathz)
+      observeEvent(input$references_par, {update_pre_file("references.txt", references_par(), pathz)})
     }
     setwd(cw)
   }) # return to project folder wd
@@ -431,7 +474,21 @@ server <- function(input, output, session) {
       cw <- proj_dir()
       preregPath<-(paste(c(cw, "preregistration"), collapse = "/"))
       pssr::render_files(input_files(), preregPath, render_params = list(title_par = title_par(),
-                                                                         references_par = references_par()))
+                                                                         author_par = author_par(),
+                                                                         affiliation_par = affiliation_par(),
+                                                                         study_questions_par = study_questions_par(),
+                                                                         study_hypotheses_par = study_hypotheses_par(),
+                                                                         stimuli_par = stimuli_par(),
+                                                                         questionnaire_par = questionnaire_par(),
+                                                                         equipment_par = equipment_par(),
+                                                                         procedure_par = procedure_par(),
+                                                                         protocol_par = protocol_par(),
+                                                                         participant_number_par = participant_number_par(),
+                                                                         stopping_rule_par = stopping_rule_par(),
+                                                                         confirming_theershold_par = confirming_theershold_par(),
+                                                                         disconfirming_theershold_par = disconfirming_theershold_par(),
+                                                                         other_par = other_par(),
+                                                                         references_par = ))
       output$summary <- renderText(paste0("Files rendered succesfully in: ", proj_dir(),
                                           "/preregistration"))
     } else{
@@ -454,6 +511,7 @@ server <- function(input, output, session) {
       preregPath2 <- (paste(c(cw, "preregistration/backuptext", pathz), collapse = "/"))
 
       if(dir.exists(preregPath2)){
+        setwd(preregPath2)
         read_pre_file("title.txt", "title_par", session, pathz)
         observeEvent(input$title_par, {update_pre_file("title.txt", title_par(), pathz)})
         read_pre_file("author.txt", "author_par", session, pathz)
