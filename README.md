@@ -11,9 +11,8 @@ All this software is available for free and available on the following links: [R
 After that, you can double click R and install the _pssr_ package by pasting the following code in the R console:
 
 ```r
-# install.packages("devtools") # In case devtools is not installed, delete the first hashtag and run the command again.
-library(devtools)
-install_github("AngelosPsy/pssr")
+if(!require(devtools)) { install.packages("devtools") } # Install devtools incase it is not installed
+devtools::install_github("AngelosPsy/pssr")
 ```
 
 
