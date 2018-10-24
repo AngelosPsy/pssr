@@ -12,13 +12,6 @@ options(editor = "internal")
                          color: #cc3f3f;}'
 
 read_pre_file <- function(text_file, object, session_in = session, file_path = "none") {
-  #if (file_path == "none"){
-  #  text_file <- paste0("backuptext/", text_file)
-  #} else{
-    #text_file <- paste0("backuptext/", file_path, "/", text_file)
-    #getwd()
-  #}
-
   if (file.exists(x = text_file)){
     rt <- readLines(text_file)
     updateTextAreaInput(session = session_in, object, value = rt)
@@ -272,7 +265,6 @@ ui <- fluidPage(
                            h5(""),
                            verbatimTextOutput("commit_info")
                            )
-
       )
     )
   )
@@ -280,9 +272,11 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
+  session$onSessionEnded(stopApp)
+
   # Function to recall the current volumes based on the project directory
   ui_volumes <- function() {
-    sel_path <- parseDirPath(volumes, input$folderChoose)
+    sel_path <- parseDirPath(c(wd = ".", volumes), input$folderChoose)
 
     volumes <- volumes()
     if (length(sel_path()) > 0 && !sel_path() %in% volumes) {
@@ -311,12 +305,12 @@ server <- function(input, output, session) {
   project_name <- reactive({as.character(input$text)})
 
   # Refer to the proper paths and roots in each button that requires it
-  shinyDirChoose(input, 'folder', roots = volumes, session = session)
-  shinyDirChoose(input, 'folderexisting', roots = volumes, session = session)
+  shinyDirChoose(input, 'folder', roots = c(wd='.', volumes), session = session)
+  shinyDirChoose(input, 'folderexisting', roots = c(wd='.', volumes), session = session)
 
   # Reactive variables to store the paths (new or existing)
-  sel_path <- reactive({return(print(parseDirPath(volumes, input$folder)))})
-  sel_path_exist <- reactive({return(print(parseDirPath(volumes, input$folderexisting)))})
+  sel_path <- reactive({return(print(parseDirPath(c(wd = ".", volumes), input$folder)))})
+  sel_path_exist <- reactive({return(print(parseDirPath(c(wd = ".", volumes), input$folderexisting)))})
 
   # Create a new project
   creat_proj <- eventReactive(input$folder, {
@@ -324,7 +318,7 @@ server <- function(input, output, session) {
     pssr::make_project(proj_name = input$text)
     creat_proj <- paste(sel_path(), input$text, sep = "/")
     setwd(creat_proj)
-
+    return(print(getwd()))
     pssr::folder_readmes(creat_proj)
     pssr::init_repo(creat_proj)
 
@@ -376,7 +370,7 @@ server <- function(input, output, session) {
   # Hide version control tab if project is not selected
   observe({hideTab("tabs","template_tab")})
 
-  # Parameters for eps template
+  # Parameters for pss template
   title_par                     <- reactive({input$title_par})
   author_par                    <- reactive({input$author_par})
   affiliation_par               <- reactive({input$affiliation_par})
@@ -396,8 +390,9 @@ server <- function(input, output, session) {
 
   # Define standard path to for the choose view for  PDF files to render
   shinyFileChoose(input, 'pdfButton', roots = ui_volumes, session = session, filetypes=c('', 'Rmd'))
+  #shinyFileSave(input, 'pdfButton', roots = ui_volumes, session = session, filetypes=c('', 'Rmd'))
 
-  template_reac <- reactive({input$selectTemplate})
+  template_reac    <- reactive({input$selectTemplate})
   prereg_name_reac <- reactive({input$preregistrationtext})
 
   # Disable create preregistration button if name field is empty
@@ -406,19 +401,20 @@ server <- function(input, output, session) {
                          !is.null(input$preregistrationtext) && input$preregistrationtext != "" && proj_dir() != "")
   })
 
-
   # Hide render PDFs button if nothing has been chose
-  shinyjs::hide("render_button")
-  shinyjs::onclick("pdfButton", show("render_button"))
+   shinyjs::hide("render_button")
+   shinyjs::onclick("pdfButton", show("render_button"))
 
   # Create a preregistration template
   observeEvent(input$createpre, {
     cw <- proj_dir()
     setwd(paste(c(cw, "preregistration"), collapse = "/"))
     if(directoryReact() %in% c("cos", "aspredicted")){
+      # In case of the cos or the aspredicted template, we save only the .rmd file
       pssr::prereg_create(file_name = prereg_name_reac(),
                           template_name = template_reac())
     } else {
+      # In case of the pss template, we need to save different txt files.
       pssr::prereg_create(file_name = prereg_name_reac(),
                           template_name = template_reac(), edit = FALSE)
       setwd("backuptext")
@@ -426,7 +422,6 @@ server <- function(input, output, session) {
       dir.create(prereg_name_reac())
       setwd(prereg_name_reac())
       pathz <- getwd()
-      print(pathz)
 
       read_pre_file("title.txt", "title_par", session, pathz)
       observeEvent(input$title_par, {setwd(print(pathz)); update_pre_file("title.txt", title_par(), pathz)})
@@ -465,30 +460,35 @@ server <- function(input, output, session) {
   }) # return to project folder wd
 
   # Reactive names from the input files dialog window
-  input_files <- reactive({return(print(as.character(parseFilePaths(volumes,
-                                                                    input$pdfButton)$name)))})
+  input_files <- reactive({shinyFiles::parseFilePaths(ui_volumes, input$pdfButton)$name})
 
   # Render the selected markdown files into pdf files
   renderSelectedPDF <- observeEvent(input$render_button,{
     if (length(input_files()) > 0 ){
+
+      print(paste("check: ", input_files() ))
+
       cw <- proj_dir()
-      preregPath<-(paste(c(cw, "preregistration"), collapse = "/"))
-      pssr::render_files(input_files(), preregPath, render_params = list(title_par = title_par(),
-                                                                         author_par = author_par(),
-                                                                         affiliation_par = affiliation_par(),
-                                                                         study_questions_par = study_questions_par(),
-                                                                         study_hypotheses_par = study_hypotheses_par(),
-                                                                         stimuli_par = stimuli_par(),
-                                                                         questionnaire_par = questionnaire_par(),
-                                                                         equipment_par = equipment_par(),
-                                                                         procedure_par = procedure_par(),
-                                                                         protocol_par = protocol_par(),
-                                                                         participant_number_par = participant_number_par(),
-                                                                         stopping_rule_par = stopping_rule_par(),
-                                                                         confirming_theershold_par = confirming_theershold_par(),
-                                                                         disconfirming_theershold_par = disconfirming_theershold_par(),
-                                                                         other_par = other_par(),
-                                                                         references_par = ))
+
+      preregPath <- (paste(c(cw, "preregistration"), collapse = "/"))
+
+      pssr::render_files(file_list = input_files(), location_path = preregPath,
+                         render_params = list(title_par = title_par(),
+                                              author_par = author_par(),
+                                              affiliation_par = affiliation_par(),
+                                              study_questions_par = study_questions_par(),
+                                              study_hypotheses_par = study_hypotheses_par(),
+                                              stimuli_par = stimuli_par(),
+                                              questionnaire_par = questionnaire_par(),
+                                              equipment_par = equipment_par(),
+                                              procedure_par = procedure_par(),
+                                              protocol_par = protocol_par(),
+                                              participant_number_par = participant_number_par(),
+                                              stopping_rule_par = stopping_rule_par(),
+                                              confirming_theershold_par = confirming_theershold_par(),
+                                              disconfirming_theershold_par = disconfirming_theershold_par(),
+                                              other_par = other_par(),
+                                              references_par = references_par()))
       output$summary <- renderText(paste0("Files rendered succesfully in: ", proj_dir(),
                                           "/preregistration"))
     } else{
@@ -504,11 +504,18 @@ server <- function(input, output, session) {
 
   openPrereg <- observeEvent((input$createpre || input$openpre),{
     if (length(input_files()) > 0  && (proj_dir() != "")){
-      cw <- proj_dir()
-      preregPath <- (paste(c(cw, "preregistration", input_files()), collapse = "/"))
 
+      cw <- proj_dir()
+      preregPath <- paste(c(cw, "preregistration", input_files()), collapse = "/")
       pathz <- tools::file_path_sans_ext(input_files())
+      #pathz <- input_files()
       preregPath2 <- (paste(c(cw, "preregistration/backuptext", pathz), collapse = "/"))
+
+      #print(paste("cw: ", cw))
+      #print(paste("preregPath: ", preregPath))
+      #print(paste("pathz: ", pathz))
+      #print(paste("preregPath2: ", preregPath2))
+      #print(paste("preregPath2: ", str(input$pdfButton)))
 
       if(dir.exists(preregPath2)){
         setwd(preregPath2)
@@ -547,6 +554,7 @@ server <- function(input, output, session) {
         shiny::showTab("tabs","template_tab", select = TRUE)
       } else {
         print(input_files())
+        print("here")
         utils::file.edit(normalizePath(preregPath))
       }
     }
@@ -573,6 +581,7 @@ server <- function(input, output, session) {
 
   # Print the list of available preregistrations
   output$availableRmd <- renderText({list_rmd_react()})
+
 
   ## -------------------------- SCRIPTS AND FUNCS TAB 3: Anonymize data -------------------------
 
@@ -684,7 +693,7 @@ server <- function(input, output, session) {
                            !is.null(files_to_commit()))
   })
   # Load the Git repository
-  git_repo<-reactive({tryCatch(git2r::repository(proj_dir()), error = function(e) NULL,
+  git_repo <- reactive({tryCatch(git2r::repository(proj_dir()), error = function(e) NULL,
                                warning = function(w) NULL)})
 
   # Preload username and user email if they exist in github repository config file
@@ -711,10 +720,10 @@ server <- function(input, output, session) {
   })
 
   # Commit changes
-  commit_pending<-observeEvent(input$commit, {
+  commit_pending <- observeEvent(input$commit, {
     config_repo(git_repo(), input$username, input$useremail)
     if(!is.null(files_to_commit())) {
-      pssr::commit_files(git_repo(), files_to_commit(), input$message_commit)
+      pssr::commit_files(repo_obj = git_repo(), file_list = files_to_commit(), message = input$message_commit)
       shiny::updateTabsetPanel(session, "tabs", selected = "versions_tab")
       shiny::updateTabsetPanel(session, "tabs", selected = "changes_tab")
     }
@@ -744,7 +753,7 @@ server <- function(input, output, session) {
   forUpComList <- reactiveVal()
 
   # variable that contains the commits
-  commits_repo <- eventReactive(c(input$commit,forUpComList(), proj_dir(), git_repo()),
+  commits_repo <- eventReactive(c(input$commit, forUpComList(), proj_dir(), git_repo()),
                                 {git2r::commits(git_repo())})
 
   commits_list <- eventReactive(c(input$tabs,commits_repo()),{
@@ -754,13 +763,12 @@ server <- function(input, output, session) {
   })
 
   # Dynamically render the input select list box
-  # THIS RENDERING GENERATES A WARNING WHEN FIRST ATTEMPTING TO VHOOSE A 0 INDES IN ARRAY
+  # THIS RENDERING GENERATES A WARNING WHEN FIRST ATTEMPTING TO CHOOSE A 0 INDEX IN ARRAY
   output$commit_list <- renderUI({selectInput("commit_list", h4("Select Commit"),
-                                              commits_list(),width="280px")})
+                                              commits_list(), width="280px")})
 
   # Print info about the commit
-  output$commit_info <- renderPrint(summary(commits_repo()[[as.integer
-                                                            (input$commit_list)]]))
+  output$commit_info <- renderPrint(summary(commits_repo()[[as.integer(input$commit_list)]]))
 
   # Restore a previous verson and backup if needed
   restore_git<-observeEvent(input$Restore,{
