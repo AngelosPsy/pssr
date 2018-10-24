@@ -278,6 +278,8 @@ server <- function(input, output, session) {
   ui_volumes <- function() {
     sel_path <- parseDirPath(c(wd = ".", volumes), input$folderChoose)
 
+    print(paste("Sel_path", sel_path()))
+
     volumes <- volumes()
     if (length(sel_path()) > 0 && !sel_path() %in% volumes) {
       vnames <- c(basename(proj_dir()), names(volumes))
@@ -723,6 +725,8 @@ server <- function(input, output, session) {
   commit_pending <- observeEvent(input$commit, {
     config_repo(git_repo(), input$username, input$useremail)
     if(!is.null(files_to_commit())) {
+      print(git_repo())
+      print(input$message_commit)
       pssr::commit_files(repo_obj = git_repo(), file_list = files_to_commit(), message = input$message_commit)
       shiny::updateTabsetPanel(session, "tabs", selected = "versions_tab")
       shiny::updateTabsetPanel(session, "tabs", selected = "changes_tab")
@@ -758,7 +762,7 @@ server <- function(input, output, session) {
 
   commits_list <- eventReactive(c(input$tabs,commits_repo()),{
     commits_list <- seq(1:length(commits_repo()))
-    names(commits_list) < -paste("Commit", seq(from = length(commits_repo()), to = 1, by = -1))
+    names(commits_list) <- paste("Commit", seq(from = length(commits_repo()), to = 1, by = -1))
     commits_list <- as.list(commits_list)
   })
 
