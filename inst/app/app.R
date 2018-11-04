@@ -276,10 +276,7 @@ server <- function(input, output, session) {
 
   # Function to recall the current volumes based on the project directory
   ui_volumes <- function() {
-    sel_path <- parseDirPath(c(wd = ".", volumes), input$folderChoose)
-
-    print(paste("Sel_path", sel_path()))
-
+    sel_path <- parseDirPath(volumes, input$folderChoose)
     volumes <- volumes()
     if (length(sel_path()) > 0 && !sel_path() %in% volumes) {
       vnames <- c(basename(proj_dir()), names(volumes))
@@ -307,12 +304,12 @@ server <- function(input, output, session) {
   project_name <- reactive({as.character(input$text)})
 
   # Refer to the proper paths and roots in each button that requires it
-  shinyDirChoose(input, 'folder', roots = c(wd='.', volumes), session = session)
-  shinyDirChoose(input, 'folderexisting', roots = c(wd='.', volumes), session = session)
+  shinyDirChoose(input, 'folder', roots = volumes, session = session)
+  shinyDirChoose(input, 'folderexisting', roots = volumes, session = session)
 
   # Reactive variables to store the paths (new or existing)
-  sel_path <- reactive({return(print(parseDirPath(c(wd = ".", volumes), input$folder)))})
-  sel_path_exist <- reactive({return(print(parseDirPath(c(wd = ".", volumes), input$folderexisting)))})
+  sel_path <- reactive({return(print(parseDirPath(volumes, input$folder)))})
+  sel_path_exist <- reactive({return(print(parseDirPath(volumes, input$folderexisting)))})
 
   # Create a new project
   creat_proj <- eventReactive(input$folder, {
@@ -320,7 +317,6 @@ server <- function(input, output, session) {
     pssr::make_project(proj_name = input$text)
     creat_proj <- paste(sel_path(), input$text, sep = "/")
     setwd(creat_proj)
-    return(print(getwd()))
     pssr::folder_readmes(creat_proj)
     pssr::init_repo(creat_proj)
 
@@ -362,8 +358,8 @@ server <- function(input, output, session) {
     } else if(proj_dir()!=""){
       updateTextInput(session, "text", value = tail(unlist(strsplit(getwd(), "/")), 1))
       ""
-  }
-  }
+      }
+    }
   )
 
   ## -------------------------- SCRIPTS AND FUNCS TAB 2: Pre-registration tab-------------------------
@@ -392,7 +388,6 @@ server <- function(input, output, session) {
 
   # Define standard path to for the choose view for  PDF files to render
   shinyFileChoose(input, 'pdfButton', roots = ui_volumes, session = session, filetypes=c('', 'Rmd'))
-  #shinyFileSave(input, 'pdfButton', roots = ui_volumes, session = session, filetypes=c('', 'Rmd'))
 
   template_reac    <- reactive({input$selectTemplate})
   prereg_name_reac <- reactive({input$preregistrationtext})
@@ -510,14 +505,7 @@ server <- function(input, output, session) {
       cw <- proj_dir()
       preregPath <- paste(c(cw, "preregistration", input_files()), collapse = "/")
       pathz <- tools::file_path_sans_ext(input_files())
-      #pathz <- input_files()
       preregPath2 <- (paste(c(cw, "preregistration/backuptext", pathz), collapse = "/"))
-
-      #print(paste("cw: ", cw))
-      #print(paste("preregPath: ", preregPath))
-      #print(paste("pathz: ", pathz))
-      #print(paste("preregPath2: ", preregPath2))
-      #print(paste("preregPath2: ", str(input$pdfButton)))
 
       if(dir.exists(preregPath2)){
         setwd(preregPath2)
@@ -725,8 +713,8 @@ server <- function(input, output, session) {
   commit_pending <- observeEvent(input$commit, {
     config_repo(git_repo(), input$username, input$useremail)
     if(!is.null(files_to_commit())) {
-      print(git_repo())
-      print(input$message_commit)
+      #print(git_repo())
+      #print(input$message_commit)
       pssr::commit_files(repo_obj = git_repo(), file_list = files_to_commit(), message = input$message_commit)
       shiny::updateTabsetPanel(session, "tabs", selected = "versions_tab")
       shiny::updateTabsetPanel(session, "tabs", selected = "changes_tab")
@@ -810,7 +798,6 @@ server <- function(input, output, session) {
                                                              "This is a commit that reverts to state in commit # "),
                                                       as.integer(length(commits_repo()))-as.integer(input$commit_list)+1), '"')
       system(commandCommit)
-
     }
 
     # Force commit list update
