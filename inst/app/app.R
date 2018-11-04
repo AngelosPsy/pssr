@@ -751,16 +751,22 @@ server <- function(input, output, session) {
   commits_list <- eventReactive(c(input$tabs,commits_repo()),{
     commits_list <- seq(1:length(commits_repo()))
     names(commits_list) <- paste("Commit", seq(from = length(commits_repo()), to = 1, by = -1))
+    print(as.list(commits_list))
     commits_list <- as.list(commits_list)
   })
 
   # Dynamically render the input select list box
   # THIS RENDERING GENERATES A WARNING WHEN FIRST ATTEMPTING TO CHOOSE A 0 INDEX IN ARRAY
-  output$commit_list <- renderUI({selectInput("commit_list", h4("Select Commit"),
+  output$commit_list <- renderUI({
+    print(commits_list())
+    selectInput("commit_list", h4("Select Commit"),
                                               commits_list(), width="280px")})
 
   # Print info about the commit
-  output$commit_info <- renderPrint(summary(commits_repo()[[as.integer(input$commit_list)]]))
+  output$commit_info <- renderPrint({
+    # There should be at least one commit before the list shows up
+    req(as.integer(input$commit_list) > 0)
+    summary(commits_repo()[[as.integer(input$commit_list)]])})
 
   # Restore a previous verson and backup if needed
   restore_git<-observeEvent(input$Restore,{
