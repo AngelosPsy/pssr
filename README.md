@@ -26,12 +26,7 @@ and type in
 pssr::shiny_app()
 ```
 
-The app window will now appear. After that, you will be able to navigate through the tabs and use the package as described in the publication (or the tutorial).
-
-``` r
-emo::ji("poop")
-```
-
+The app window will now appear. After that, you will be able to navigate through the tabs and use the package as described in the publication (or the tutorial...).
 
 # Help, bugs, requests
 
