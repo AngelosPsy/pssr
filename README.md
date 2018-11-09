@@ -19,14 +19,19 @@ devtools::install_github("AngelosPsy/pssr")
 ## Tutorial
 A tutorial of how to use the package can be found in [pdf](tutorial_pssr.pdf) or [html](http://htmlpreview.github.io/?) format.  
 
-If you do not want to read the tutorial but whant to just play with the program, first install the software , start an R session
+If you do not want to read the tutorial but want to just play with the program, first install the software , start an R session
 and type in 
 
 ```r
 pssr::shiny_app()
 ```
 
-The app window will now appear. After that, you will be able to navigate through the tabs and use the package as described in the publication (or the tutorial `:wink:`).
+The app window will now appear. After that, you will be able to navigate through the tabs and use the package as described in the publication (or the tutorial).
+
+``` r
+emo::ji("poop")
+```
+
 
 # Help, bugs, requests
 
