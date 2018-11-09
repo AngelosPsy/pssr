@@ -16,21 +16,17 @@ devtools::install_github("AngelosPsy/pssr")
 ```
 
 
-## Usage
+## Tutorial
+A tutorial of how to use the package can be found in [pdf](tutorial_pssr.pdf) or [html](http://htmlpreview.github.io/?) format.  
 
-In any new R session, you can just load the package with the following command:
-
-```r
-library(pssr)
-```
-
-The package is now ready to be used. You can start now the program by just typing in:
+If you do not want to read the tutorial but whant to just play with the program, first install the software , start an R session
+and type in 
 
 ```r
-shiny_app()
+pssr::shiny_app()
 ```
 
-The app window will now appear. After that, you will be able to navigate through the tabs and use the package as described in the publication.
+The app window will now appear. After that, you will be able to navigate through the tabs and use the package as described in the publication (or the tutorial `:wink:`).
 
 # Help, bugs, requests
 
