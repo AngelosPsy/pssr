@@ -750,8 +750,7 @@ server <- function(input, output, session) {
 
   commits_list <- eventReactive(c(input$tabs,commits_repo()),{
     commits_list <- seq(1:length(commits_repo()))
-    names(commits_list) <- paste("Commit", seq(from = length(commits_repo()), to = 1, by = -1))
-    print(as.list(commits_list))
+    names(commits_list) <- paste("Commit", seq_along( length(commits_repo())))
     commits_list <- as.list(commits_list)
   })
 
