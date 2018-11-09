@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 library(shiny)
 library(pssr)
 library(shinyFiles)
@@ -23,13 +22,6 @@ read_pre_file <- function(text_file, object, session_in = session, file_path = "
 }
 
 update_pre_file <- function(text_file, object, file_path = "none"){
-  #if(file_path == "none"){
-
-    #text_file <- paste0("preregistration/backuptext/", text_file)
-  #}else{
-    #text_file <- paste0("preregistration/backuptext/", file_path, "/", text_file)
-
-  #}
   write.table(object, text_file,
               eol = "", quote = FALSE, row.names = FALSE, col.names = FALSE)
 }
@@ -123,14 +115,16 @@ ui <- fluidPage(
                            textAreaInput("author_par", h2("Author list"), "Insert Authors", width = "600px", height = "80px"),
                            textAreaInput("affiliation_par", h3("Affiliation list"), "Insert Affiliations", width = "600px", height = "80px"),
                            h1("Background of the study"),
+                           textAreaInput("primary_second_par", "Primary study/Secondary analyses", "Is it a primary study (where data are collected) or a study where secondary analyses are performed in an arhival data set?", width = "600px", height = "80px"),
+                           textAreaInput("metanalysis_par", "Does the study refer to a meta-analysis?", "Mention whether the study refers to a meta-analysis. In this case, you can ignore the irrelevant parts below (e.g., participant number).", width = "600px", height = "80px"),
                            textAreaInput("study_questions_par", "Study questions", "Define the study's research questions", width = "600px", height = "80px"),
                            textAreaInput("study_hypotheses_par", "Study hypotheses", "Define the study's hypotheses", width = "600px", height = "80px"),
                            h1("Methods"),
-                           textAreaInput("stimuli_par", "Stimuli", "Stimuli to be used", width = "600px", height = "80px"),
-                           textAreaInput("questionnaire_par", "Questionnaires", "Questionnaires to be used", width = "600px", height = "80px"),
-                           textAreaInput("equipment_par", "Equipment", "Equipment to be used", width = "600px", height = "80px"),
-                           textAreaInput("procedure_par", "Procedure", "Describe the procedure to be followed", width = "600px", height = "80px"),
-                           textAreaInput("protocol_par", "Protocol", "Paste the protocol", width = "600px", height = "80px"),
+                           textAreaInput("stimuli_par", "Stimuli", "Stimuli to be used. In case of secondary analyses just copy-paste the DOI of the the original study.", width = "600px", height = "80px"),
+                           textAreaInput("questionnaire_par", "Questionnaires", "Questionnaires to be used.  In case of secondary analyses just copy-paste the DOI of the the original study.", width = "600px", height = "80px"),
+                           textAreaInput("equipment_par", "Equipment", "Equipment to be used.  In case of secondary analyses just copy-paste the DOI of the the original study.", width = "600px", height = "80px"),
+                           textAreaInput("procedure_par", "Procedure", "Describe the procedure to be followed.  In case of secondary analyses just copy-paste the DOI of the the original study.", width = "600px", height = "80px"),
+                           textAreaInput("protocol_par", "Protocol", "Paste the protocol.  In case of secondary analyses just copy-paste the DOI of the the original study.", width = "600px", height = "80px"),
                            h1("Statistical analyses"),
                            textAreaInput("participant_number_par", "Participant number", "Argue about the number of participants", width = "600px", height = "80px"),
                            textAreaInput("stopping_rule_par", "Stopping rule", "Rule for stopping data collection", width = "600px", height = "80px"),
@@ -373,6 +367,7 @@ server <- function(input, output, session) {
   title_par                     <- reactive({input$title_par})
   author_par                    <- reactive({input$author_par})
   affiliation_par               <- reactive({input$affiliation_par})
+  primary_second_par            <- reactive({input$primary_second_par})
   study_questions_par           <- reactive({input$study_questions_par})
   study_hypotheses_par          <- reactive({input$study_hypotheses_par})
   stimuli_par                   <- reactive({input$stimuli_par})
@@ -380,6 +375,7 @@ server <- function(input, output, session) {
   equipment_par                 <- reactive({input$equipment_par})
   procedure_par                 <- reactive({input$procedure_par})
   protocol_par                  <- reactive({input$protocol_par})
+  metanalysis_par               <- reactive({input$metanalysis_par})
   participant_number_par        <- reactive({input$participant_number_par})
   stopping_rule_par             <- reactive({input$stopping_rule_par})
   confirming_theershold_par     <- reactive({input$confirming_theershold_par})
@@ -427,6 +423,8 @@ server <- function(input, output, session) {
       observeEvent(input$author_par, {update_pre_file("author.txt", author_par(), pathz)})
       read_pre_file("affiliation.txt", "affiliation_par", session, pathz)
       observeEvent(input$affiliation_par, {update_pre_file("affiliation.txt", affiliation_par(), pathz)})
+      read_pre_file("primary_second.txt", "primary_second_par", session, pathz)
+      observeEvent(input$primary_second_par, {update_pre_file("primary_second.txt", primary_second_par(), pathz)})
       read_pre_file("study_questions.txt", "study_questions_par", session, pathz)
       observeEvent(input$study_questions_par, {update_pre_file("study_questions.txt", study_questions_par(), pathz)})
       read_pre_file("study_hypotheses.txt", "study_hypotheses_par", session, pathz)
@@ -441,6 +439,8 @@ server <- function(input, output, session) {
       observeEvent(input$procedure_par, {update_pre_file("procedure.txt", procedure_par(), pathz)})
       read_pre_file("protocol.txt", "protocol_par", session, pathz)
       observeEvent(input$protocol_par, {update_pre_file("protocol.txt", protocol_par(), pathz)})
+      read_pre_file("metanalysis.txt", "metanalysis_par", session, pathz)
+      observeEvent(input$metanalysis_par, {update_pre_file("metanalysis.txt", metanalysis_par(), pathz)})
       read_pre_file("participant_number.txt", "participant_number_par", session, pathz)
       observeEvent(input$participant_number_par, {update_pre_file("participant_number.txt", participant_number_par(), pathz)})
       read_pre_file("stopping_rule.txt", "stopping_rule_par", session, pathz)
@@ -474,6 +474,7 @@ server <- function(input, output, session) {
                          render_params = list(title_par = title_par(),
                                               author_par = author_par(),
                                               affiliation_par = affiliation_par(),
+                                              primary_second_par = primary_second_par(),
                                               study_questions_par = study_questions_par(),
                                               study_hypotheses_par = study_hypotheses_par(),
                                               stimuli_par = stimuli_par(),
@@ -481,6 +482,7 @@ server <- function(input, output, session) {
                                               equipment_par = equipment_par(),
                                               procedure_par = procedure_par(),
                                               protocol_par = protocol_par(),
+                                              metanalysis_par = metanalysis_par(),
                                               participant_number_par = participant_number_par(),
                                               stopping_rule_par = stopping_rule_par(),
                                               confirming_theershold_par = confirming_theershold_par(),
@@ -516,6 +518,8 @@ server <- function(input, output, session) {
         observeEvent(input$author_par, {update_pre_file("author.txt", author_par(), pathz)})
         read_pre_file("affiliation.txt", "affiliation_par", session, pathz)
         observeEvent(input$affiliation_par, {update_pre_file("affiliation.txt", affiliation_par(), pathz)})
+        read_pre_file("primary_second.txt", "primary_second_par", session, pathz)
+        observeEvent(input$primary_second_par, {update_pre_file("primary_second.txt", primary_second_par(), pathz)})
         read_pre_file("study_questions.txt", "study_questions_par", session, pathz)
         observeEvent(input$study_questions_par, {update_pre_file("study_questions.txt", study_questions_par(), pathz)})
         read_pre_file("study_hypotheses.txt", "study_hypotheses_par", session, pathz)
@@ -530,6 +534,8 @@ server <- function(input, output, session) {
         observeEvent(input$procedure_par, {update_pre_file("procedure.txt", procedure_par(), pathz)})
         read_pre_file("protocol.txt", "protocol_par", session, pathz)
         observeEvent(input$protocol_par, {update_pre_file("protocol.txt", protocol_par(), pathz)})
+        read_pre_file("metanalysis.txt", "metanalysis_par", session, pathz)
+        observeEvent(input$metanalysis_par, {update_pre_file("metanalysis.txt", metanalysis_par(), pathz)})
         read_pre_file("participant_number.txt", "participant_number_par", session, pathz)
         observeEvent(input$participant_number_par, {update_pre_file("participant_number.txt", participant_number_par(), pathz)})
         read_pre_file("stopping_rule.txt", "stopping_rule_par", session, pathz)
@@ -814,7 +820,6 @@ server <- function(input, output, session) {
 
 # Run the application
 shinyApp(ui = ui, server = server)
-=======
 library(shiny)
 library(pssr)
 library(shinyFiles)
@@ -829,13 +834,6 @@ options(editor = "internal")
                          color: #cc3f3f;}'
 
 read_pre_file <- function(text_file, object, session_in = session, file_path = "none") {
-  #if (file_path == "none"){
-  #  text_file <- paste0("backuptext/", text_file)
-  #} else{
-    #text_file <- paste0("backuptext/", file_path, "/", text_file)
-    #getwd()
-  #}
-
   if (file.exists(x = text_file)){
     rt <- readLines(text_file)
     updateTextAreaInput(session = session_in, object, value = rt)
@@ -846,13 +844,6 @@ read_pre_file <- function(text_file, object, session_in = session, file_path = "
 }
 
 update_pre_file <- function(text_file, object, file_path = "none"){
-  #if(file_path == "none"){
-
-    #text_file <- paste0("preregistration/backuptext/", text_file)
-  #}else{
-    #text_file <- paste0("preregistration/backuptext/", file_path, "/", text_file)
-
-  #}
   write.table(object, text_file,
               eol = "", quote = FALSE, row.names = FALSE, col.names = FALSE)
 }
@@ -1641,4 +1632,3 @@ server <- function(input, output, session) {
 
 # Run the application
 shinyApp(ui = ui, server = server)
->>>>>>> b9130ba2eab76b92d9647c0460f2eba7243c6582

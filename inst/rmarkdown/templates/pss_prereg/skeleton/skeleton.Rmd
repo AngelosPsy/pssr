@@ -38,9 +38,22 @@ in the template but then the code will print empty spaces throughout the templat
 
 `r params$author_par`
 
+## Affiliations
+<!--  Authors' affiliations-->
+
 `r params$affiliation_par`
 
 # Background of the study
+
+## Primary study/Secondary analyses
+<!-- Is it a primary study (where data are collected) or a study where secondary analyses are performed in an arhival data set? -->
+
+`r primary_second_par`
+
+## Does the study refer to a meta-analysis?
+
+<!-- Mention whether the study refers to a meta-analysis. In this case, you can ignore the irrelevant parts below (e.g., participant number). -->
+`r metanalysis_par` 
 
 ## Study questions
 <!-- Define the study's question -->
@@ -79,6 +92,7 @@ in the template but then the code will print empty spaces throughout the templat
 `r params$protocol_par`
 
 # Statistical analyses
+
 ## Participants
 <!-- How many participants will be rectruited? Is there a power analysis performed? -->
 
