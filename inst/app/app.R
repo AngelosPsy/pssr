@@ -84,9 +84,11 @@ ui <- fluidPage(
                           br(),
                           textInput("preregistrationtext", label = h4("Enter name of the
                                     preregistration", value = "")),
-                          selectInput("selectTemplate", label = h4("Choose a pre-registration template"), choices =
-                                        list("pss" = "pss", "secondary_analyses" = "secondary_analyses", "aspredicted" = "aspredicted",
-                                             "cos" = "cos"), selected = 2),
+                          selectInput("selectTemplate", label = h4("Choose a pre-registration template"),
+                                      choices = list("pss" = "pss",
+                                                     "secondary_analyses" = "secondary_analyses",
+                                                     "aspredicted" = "aspredicted",
+                                                     "cos" = "cos"), selected = 1),
                           div(style="display:inline-block",
                               actionButton("f_prer_button", "Search Preregistrations",icon = icon("search"),
                               style="color: #fff; background-color: #337ab7;
@@ -962,7 +964,7 @@ ui <- fluidPage(
                           textInput("preregistrationtext", label = h4("Enter name of the
                                     preregistration", value = "")),
                           selectInput("selectTemplate", label = h4("Choose a pre-registration template"), choices =
-                                        list("pss" = "pss", "aspredicted" = "aspredicted",
+                                        list("pss" = "pss", "secondary_analyses" = "secondary_analyses", "aspredicted" = "aspredicted",
                                              "cos" = "cos"), selected = 2),
                           div(style="display:inline-block",
                               actionButton("f_prer_button", "Search Preregistrations",icon = icon("search"),
