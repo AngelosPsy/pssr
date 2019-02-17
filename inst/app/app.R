@@ -85,7 +85,7 @@ ui <- fluidPage(
                           textInput("preregistrationtext", label = h4("Enter name of the
                                     preregistration", value = "")),
                           selectInput("selectTemplate", label = h4("Choose a pre-registration template"), choices =
-                                        list("pss" = "pss", "aspredicted" = "aspredicted",
+                                        list("pss" = "pss", "secondary_analyses" = "secondary_analyses", "aspredicted" = "aspredicted",
                                              "cos" = "cos"), selected = 2),
                           div(style="display:inline-block",
                               actionButton("f_prer_button", "Search Preregistrations",icon = icon("search"),
@@ -159,7 +159,7 @@ ui <- fluidPage(
                                       "sha256", "sha512", "xxhash32", "xxhash64",
                                       "murmur32")),
 
-                          radioButtons("save_data", "Do you want the data to be saved?",
+                          radioButtons("save_data", "Do you want the anonymized data to be saved?",
                                       choices = c(Yes = TRUE, No = FALSE), selected =
                                       "FALSE"),
 
@@ -316,7 +316,8 @@ server <- function(input, output, session) {
     pssr::init_repo(creat_proj)
 
     # Load a standard message for the first time commit
-    updateTextInput(session,"message_commit",value = "This is a standard message for the first commit")
+    updateTextInput(session,"message_commit",
+                    value = "This is a standard message for the first commit")
     creat_proj
   })
 
@@ -408,7 +409,8 @@ server <- function(input, output, session) {
       pssr::prereg_create(file_name = prereg_name_reac(),
                           template_name = template_reac())
     } else {
-      # In case of the pss template, we need to save different txt files.
+      # In case of the pss or the secondary_analyses templates,
+      #we need to save different txt files.
       pssr::prereg_create(file_name = prereg_name_reac(),
                           template_name = template_reac(), edit = FALSE)
       setwd("backuptext")
@@ -416,7 +418,11 @@ server <- function(input, output, session) {
       dir.create(prereg_name_reac())
       setwd(prereg_name_reac())
       pathz <- getwd()
+      # Here we use the variables that may or may note be used by our templates.
+      # This is because there is overlap between the templates and because
+      # we want to avoid even more ifelse statements
 
+      # parameters for the pss template
       read_pre_file("title.txt", "title_par", session, pathz)
       observeEvent(input$title_par, {setwd(print(pathz)); update_pre_file("title.txt", title_par(), pathz)})
       read_pre_file("author.txt", "author_par", session, pathz)
@@ -453,6 +459,24 @@ server <- function(input, output, session) {
       observeEvent(input$other_par, {update_pre_file("other.txt", other_par(), pathz)})
       read_pre_file("references.txt", "references_par", session, pathz)
       observeEvent(input$references_par, {update_pre_file("references.txt", references_par(), pathz)})
+
+      # Additional variables for the secondary_analyses template
+      read_pre_file("operationalization.txt", "operationalization_par", session, pathz)
+      observeEvent(input$operationalization_par, {update_pre_file("operationalization.txt", operationalization_par(), pathz)})
+      read_pre_file("data_source.txt", "data_source_par", session, pathz)
+      observeEvent(input$data_source_par, {update_pre_file("data_source.txt", data_source_par(), pathz)})
+      read_pre_file("data_obtained.txt", "data_obtained_par", session, pathz)
+      observeEvent(input$data_obtained_par, {update_pre_file("data_obtained.txt", data_obtained_par(), pathz)})
+      read_pre_file("exclusion_criteria.txt", "exclusion_criteria_par", session, pathz)
+      observeEvent(input$exclusion_criteria_par, {update_pre_file("exclusion_criteria.txt", exclusion_criteria_par(), pathz)})
+      read_pre_file("stat_analyses.txt", "stat_analyses_par", session, pathz)
+      observeEvent(input$stat_analyses_par, {update_pre_file("stat_analyses.txt", stat_analyses_par(), pathz)})
+      read_pre_file("confirming_theershold.txt", "confirming_theershold_par", session, pathz)
+      observeEvent(input$confirming_theershold_par, {update_pre_file("confirming_theershold.txt", confirming_theershold_par(), pathz)})
+      read_pre_file("validated_analyses.txt", "validated_analyses_par", session, pathz)
+      observeEvent(input$validated_analyses_par, {update_pre_file("validated_analyses.txt", validated_analyses_par(), pathz)})
+      read_pre_file("timeline.txt", "timeline_par", session, pathz)
+      observeEvent(input$timeline_par, {update_pre_file("timeline.txt", timeline_par(), pathz)})
     }
     setwd(cw)
   }) # return to project folder wd
@@ -471,7 +495,9 @@ server <- function(input, output, session) {
       preregPath <- (paste(c(cw, "preregistration"), collapse = "/"))
 
       pssr::render_files(file_list = input_files(), location_path = preregPath,
-                         render_params = list(title_par = title_par(),
+                         render_params = list(
+                                              # pss template
+                                              title_par = title_par(),
                                               author_par = author_par(),
                                               affiliation_par = affiliation_par(),
                                               primary_second_par = primary_second_par(),
@@ -488,7 +514,17 @@ server <- function(input, output, session) {
                                               confirming_theershold_par = confirming_theershold_par(),
                                               disconfirming_theershold_par = disconfirming_theershold_par(),
                                               other_par = other_par(),
-                                              references_par = references_par()))
+                                              references_par = references_par(),
+
+                                              # Additional parameters for secondary_analyses template
+                                              study_hypotheses_par = study_hypotheses_par(),
+                                              operationalization_par = operationalization_par(),
+                                              data_source_par = data_source_par(),
+                                              data_obtained_par = data_obtained_par(),
+                                              exclusion_criteria_par = exclusion_criteria_par(),
+                                              stat_analyses_par = stat_analyses_par(),
+                                              validated_analyses_par = validated_analyses_par(),
+                                              timeline_par = timeline_par()))
       output$summary <- renderText(paste0("Files rendered succesfully in: ", proj_dir(),
                                           "/preregistration"))
     } else{
@@ -548,6 +584,25 @@ server <- function(input, output, session) {
         observeEvent(input$other_par, {update_pre_file("other.txt", other_par(), pathz)})
         read_pre_file("references.txt", "references_par", session, pathz)
         observeEvent(input$references_par, {update_pre_file("references.txt", references_par(), pathz)})
+
+        # Additional varaibces for secondary_analyses template
+        read_pre_file("operationalization.txt", "operationalization_par", session, pathz)
+        observeEvent(input$operationalization_par, {update_pre_file("operationalization.txt", operationalization_par(), pathz)})
+        read_pre_file("data_source.txt", "data_source_par", session, pathz)
+        observeEvent(input$data_source_par, {update_pre_file("data_source.txt", data_source_par(), pathz)})
+        read_pre_file("data_obtained.txt", "data_obtained_par", session, pathz)
+        observeEvent(input$data_obtained_par, {update_pre_file("data_obtained.txt", data_obtained_par(), pathz)})
+        read_pre_file("exclusion_criteria.txt", "exclusion_criteria_par", session, pathz)
+        observeEvent(input$exclusion_criteria_par, {update_pre_file("exclusion_criteria.txt", exclusion_criteria_par(), pathz)})
+        read_pre_file("stat_analyses.txt", "stat_analyses_par", session, pathz)
+        observeEvent(input$stat_analyses_par, {update_pre_file("stat_analyses.txt", stat_analyses_par(), pathz)})
+        read_pre_file("confirming_theershold.txt", "confirming_theershold_par", session, pathz)
+        observeEvent(input$confirming_theershold_par, {update_pre_file("confirming_theershold.txt", confirming_theershold_par(), pathz)})
+        read_pre_file("validated_analyses.txt", "validated_analyses_par", session, pathz)
+        observeEvent(input$validated_analyses_par, {update_pre_file("validated_analyses.txt", validated_analyses_par(), pathz)})
+        read_pre_file("timeline.txt", "timeline_par", session, pathz)
+        observeEvent(input$timeline_par, {update_pre_file("timeline.txt", timeline_par(), pathz)})
+
         shiny::showTab("tabs","template_tab", select = TRUE)
       } else {
         print(input_files())

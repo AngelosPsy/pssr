@@ -9,14 +9,15 @@
 #' Only a warning is generated in case the file exists already and the \code{overwrite} argument is set
 #' to FALSE.
 #' @details
-#' The options for the \code{template_name} are: \code{pss}, \code{aspredicted}, \code{cos}. See the
+#' The options for the \code{template_name} are: \code{pss}, \code{secondary_analyses}, \code{aspredicted}, \code{cos}. See the
 #' \code{prereg} package for more details on these options. When the \code{aspredicted} or the \code{cos} options are used,
 #' the function uses the templates of the \code{prereg} package of Frederik Aust.
 #' @export
 prereg_create <- function(file_name = "preregistration", template_name = "pss",
                           overwrite = FALSE, edit = TRUE){
   # Check if the template argument has one of the four preferred choices
-  match.arg(template_name, c("pss", "aspredicted", "cos"))
+  match.arg(template_name, c("pss", "secondary_analyses",
+                             "aspredicted", "cos"))
 
   # Define preregistration package
   prereg_package <- ifelse(template_name %in% c("pss"), "pssr", "prereg")
@@ -27,7 +28,8 @@ prereg_create <- function(file_name = "preregistration", template_name = "pss",
 
   # Create the file. Take into account if the overwrite option has been selected.
   if(!overwrite & file.exists(file_name)){
-     warning(paste("The file named", file_name, "exists already. Select 'overwite' if you want to overwrite the file. Note
+     warning(paste("The file named", file_name, "exists already.
+                    Select 'overwite' if you want to overwrite the file. Note
                    that this would remove any text you have written"))
   } else if(!file.exists(file_name)){
     rmarkdown::draft(file = file_name, template = template_name, package = prereg_package, create_dir = FALSE, edit = FALSE)

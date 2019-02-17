@@ -13,7 +13,11 @@ prereg_render <- function(file_name = NULL){
   if(is.null(file_name)){
     tmp <- list.files(pattern = ".Rmd")
     if(length(tmp) > 1){
-      warning(paste(c("The following files were detected: ", paste(tmp, collate = " "), "\nThe program can render only 1 file at a time. Please select the file you want to open.")), collapse = "\t")
+      warning(paste(c("The following files were detected: ",
+                      paste(tmp, collate = " "),
+                      "\nThe program can render only 1 file at a time.
+                      Please select the file you want to open.")),
+              collapse = "\t")
     } else if (length(tmp) == 0){
       warning("No preregistration document was found. Please create one.")
     } else {
