@@ -20,7 +20,8 @@ prereg_create <- function(file_name = "preregistration", template_name = "pss",
                              "aspredicted", "cos"))
 
   # Define preregistration package
-  prereg_package <- ifelse(template_name %in% c("pss"), "pssr", "prereg")
+  prereg_package <- ifelse(template_name %in% c("pss", "secondary_analyses"),
+                           "pssr", "prereg")
 
   # Put extension in the file and template name
   file_name <- paste0(file_name, ".Rmd")
