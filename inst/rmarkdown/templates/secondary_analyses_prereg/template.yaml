@@ -1,2 +1,3 @@
 name: secondary_analyses_prereg
 description: Template for preregistrating secondary analyses
+output: pdf_document
