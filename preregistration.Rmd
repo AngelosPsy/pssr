@@ -1,0 +1,132 @@
+---
+title           : "`r params$title_par`"
+shorttitle      : "`r params$title_par`"
+date            : "`r Sys.setlocale('LC_TIME', 'C'); format(Sys.time(), '%d\\\\. %B %Y')`"
+
+output: pdf_document
+params:
+  title_par: ""                   
+  author_par: ""                  
+  affiliation_par: ""             
+  study_hypotheses_par: ""        
+  operationalization_par: ""
+  data_source_par: ""
+  data_obtained_par: ""
+  exclusion_criteria_par: ""
+  stat_analyses_par: ""
+  confirming_theershold_par: ""   
+  validated_analyses_par: ""
+  timeline_par: ""
+  other_par: ""      
+  references_par: ""
+---
+
+<!-- This is a template that can be used for pre-registrating secondary analyses. 
+This template was used so that it can 
+be easily used within the shiny app. If you want to use it via the editor, you can just go on and edit the template.
+However, make sure that you delete all R code in the template  (e.g., `r params$title_par`). You can still leave them
+in the template but then the code will print empty spaces throughout the template-->
+
+# Title
+
+<!-- Here you can provide the title of the project. In case you are editing the title yourself, you can remove the `r params$title_par` part. -->
+
+`r params$title_par`
+
+## Authors
+
+<!-- Here you can provide the authors' list together with the affiliations. -->
+
+`r params$author_par`
+
+## Affiliations
+
+<!--  Authors' affiliations-->
+
+`r params$affiliation_par`
+
+# Study hypotheses
+
+<!-- Provide a brief description of the relevant theory 
+and formulize the hypothesis as precisely as possible. -->
+
+`r params$study_hypotheses_par`
+
+# Operationalization
+
+<!-- State exactly how the variables specified in each hypothesis 
+will be measured.  -->
+
+`r   operationalization_par`
+
+# Data source
+
+<!-- Specify the source of the obtained data. Also provide 
+information about the context of the data source and clarify 
+whether the data has been previously published. -->
+
+`r   data_source_par`
+
+# Data request/access
+
+<!-- Specify how the data will be requested or accessed. 
+Clarify whether the data were already available and whether 
+the dataset has been previously explored or analyzed. -->
+
+`r  data_obtained_par`
+
+# Exclusion criteria
+
+<!-- Specify whether there were any criteria for the 
+exclusions of certain datasets, observations or time points.-->
+
+`r exclusion_criteria_par`
+
+# Statistical analyses
+
+<!-- Specify the statistical model that will be used to analyze the data. 
+Be as specific as possible and avoid ambiguity. -->
+
+`r stat_analyses_par`
+
+# Hypotheses (dis-)confirmation
+
+<!-- Specify exactly how the hypothesis will be evaluated. 
+Give specific criteria relevant to the used analytical 
+model and framework (e.g., alpha-values, Bayes Factor, RMSEA).-->
+
+`r confirming_theershold_par`
+
+# Analyses' valiation
+
+<!-- Indicate whether the proposed data-analyses have previously been 
+validated on a subset of the data or a simulated dataset. 
+If so, provide the data files and data syntax.-->
+
+`r validated_analyses_par`
+
+# Timeline
+
+<!-- Provide the (foreseen) dates for the different steps 
+in this preregistration form using.-->
+
+`r   timeline_par`
+
+## Other (Optional)
+
+<!-- Further comments -->
+
+`r params$other_par`
+
+# References
+
+<!-- Included references -->
+
+`r params$references_par`
+
+## 
+\vspace{-2pc}
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{-1in}
+\setlength{\parskip}{8pt}
+\noindent
