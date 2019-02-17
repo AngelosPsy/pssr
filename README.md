@@ -30,3 +30,11 @@ The app window will now appear. After that, you will be able to navigate through
 # Help, bugs, requests
 
 For help, bugs, or requests, you can use the issue tab in github: [https://github.com/AngelosPsy/pssr/issues](https://github.com/AngelosPsy/pssr/issues).
+
+# Citation
+
+Our package is described in:
+
+Krypotos, A., Kluglist, I. G., Mertens, G., & Engelhard, I. (in press). A Step-By-Step Guide on Preregistration and Effective Data Sharing for Psychopathology Research. _Journal of Abnormal Psychology_.
+
+A preprint of the article can be found here: https://doi.org/10.31234/osf.io/ysgfa
