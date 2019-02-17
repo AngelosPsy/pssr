@@ -24,7 +24,7 @@ to FALSE.
 Function for creating markdown file for a preregistration f.
 }
 \details{
-The options for the \code{template_name} are: \code{pss}, \code{aspredicted}, \code{cos}. See the
+The options for the \code{template_name} are: \code{pss}, \code{secondary_analyses}, \code{aspredicted}, \code{cos}. See the
 \code{prereg} package for more details on these options. When the \code{aspredicted} or the \code{cos} options are used,
 the function uses the templates of the \code{prereg} package of Frederik Aust.
 }
