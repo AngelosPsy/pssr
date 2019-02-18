@@ -66,7 +66,7 @@ and formulize the hypothesis as precisely as possible. -->
 <!-- State exactly how the variables specified in each hypothesis 
 will be measured.  -->
 
-`r   operationalization_par`
+`r params$operationalization_par`
 
 # Data source
 
@@ -74,7 +74,7 @@ will be measured.  -->
 information about the context of the data source and clarify 
 whether the data has been previously published. -->
 
-`r   data_source_par`
+`r params$data_source_par`
 
 # Data request/access
 
@@ -82,21 +82,21 @@ whether the data has been previously published. -->
 Clarify whether the data were already available and whether 
 the dataset has been previously explored or analyzed. -->
 
-`r  data_obtained_par`
+`r params$data_obtained_par`
 
 # Exclusion criteria
 
 <!-- Specify whether there were any criteria for the 
 exclusions of certain datasets, observations or time points.-->
 
-`r exclusion_criteria_par`
+`r params$exclusion_criteria_par`
 
 # Statistical analyses
 
 <!-- Specify the statistical model that will be used to analyze the data. 
 Be as specific as possible and avoid ambiguity. -->
 
-`r stat_analyses_par`
+`r params$stat_analyses_par`
 
 # Hypotheses (dis-)confirmation
 
@@ -104,7 +104,7 @@ Be as specific as possible and avoid ambiguity. -->
 Give specific criteria relevant to the used analytical 
 model and framework (e.g., alpha-values, Bayes Factor, RMSEA).-->
 
-`r confirming_theershold_par`
+`r params$confirming_theershold_par`
 
 # Analyses' valiation
 
@@ -112,14 +112,14 @@ model and framework (e.g., alpha-values, Bayes Factor, RMSEA).-->
 validated on a subset of the data or a simulated dataset. 
 If so, provide the data files and data syntax.-->
 
-`r validated_analyses_par`
+`r params$validated_analyses_par`
 
 # Timeline
 
 <!-- Provide the (foreseen) dates for the different steps 
 in this preregistration form using.-->
 
-`r   timeline_par`
+`r params$timeline_par`
 
 ## Other (Optional)
 

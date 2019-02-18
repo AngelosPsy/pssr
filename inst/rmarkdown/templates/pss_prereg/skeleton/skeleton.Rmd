@@ -60,13 +60,13 @@ in the template but then the code will print empty spaces throughout the templat
 <!-- Is it a primary study (where data are collected) or a study 
 where secondary analyses are performed in an arhival data set? -->
 
-`r primary_second_par`
+`r params$primary_second_par`
 
 ## Does the study refer to a meta-analysis?
 
 <!-- Mention whether the study refers to a meta-analysis. In this case, you can ignore the irrelevant parts below (e.g., participant number). -->
 
-`r metanalysis_par` 
+`r params$metanalysis_par` 
 
 ## Study questions
 
