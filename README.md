@@ -6,8 +6,6 @@ This is the R package that accompanies the publication "A Step-By-Step Guide on 
 
 For using the software, you will first need to install [R](https://cran.r-project.org), [Rtools](https://cran.r-project.org/bin/windows/Rtools/), and [git](https://git-scm.com/]).
 
-All this software is available for free and available on the following links: [R][https://cran.r-project.org](https://cran.r-project.org), [Rtools][https://cran.r-project.org/bin/windows/Rtools/](https://cran.r-project.org/bin/windows/Rtools/), and [git][https://git-scm.com/](https://git-scm.com/). 
-
 After that, you can double click R and install the _pssr_ package by pasting the following code in the R console:
 
 ```r
@@ -16,7 +14,7 @@ devtools::install_github("AngelosPsy/pssr")
 ```
 
 ## Tutorial
-A tutorial of how to use the package can be found in [pdf](tutorial_pssr.pdf) or [html](http://htmlpreview.github.io/?) format.  
+A tutorial of how to use the package can be found in [pdf](https://github.com/AngelosPsy/pssr_tutorial/blob/master/tutorial_pssr.pdf) or [html](http://htmlpreview.github.io/?https://github.com/AngelosPsy/pssr_tutorial/blob/master/tutorial_pssr.html) format.  
 
 If you do not want to read the tutorial but want to just play with the program, first install the software , start an R session
 and type in 
