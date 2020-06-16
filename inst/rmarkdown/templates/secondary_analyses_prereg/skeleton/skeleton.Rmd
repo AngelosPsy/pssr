@@ -28,6 +28,7 @@ params:
   stat_analyses_par: ""
   validated_analyses_par: ""
   timeline_par: ""
+  params$known_par: ""
 ---
 
 <!-- This is a template that can be used for pre-registrating secondary analyses. 
@@ -120,6 +121,12 @@ If so, provide the data files and data syntax.-->
 in this preregistration form using.-->
 
 `r params$timeline_par`
+
+# What is known about the data that could be relevant for the tested hypotheses?
+
+<!-- What is known about the data that could be relevant for the tested hypotheses? -->
+
+`r params$known_par`
 
 ## Other (Optional)
 
